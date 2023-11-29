@@ -1,0 +1,32 @@
+FROM php:8.2-fpm
+
+ENV COMPOSER_ALLOW_SUPERUSER=1
+ENV COMPOSER_HOME='/composer'
+ENV HOME='/home'
+
+RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
+
+# https://github.com/mlocati/docker-php-extension-installer
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
+
+RUN set -ex \
+#------------------------------------------------------------------
+#  extensions
+#------------------------------------------------------------------
+    && install-php-extensions \
+        pdo_pgsql \
+        zip \
+#------------------------------------------------------------------
+    && php -v \
+    && php -m \
+#
+#------------------------------------------------------------------
+#  Composer
+#------------------------------------------------------------------
+    && mkdir $COMPOSER_HOME \
+    && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+    && php composer-setup.php  --ansi --install-dir=/usr/local/bin --filename=composer \
+    && rm composer-setup.php \
+    && composer --ansi --version \
+    && chmod -R 0777 $COMPOSER_HOME
+
