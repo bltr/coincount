@@ -12,7 +12,10 @@ class TransactionsController extends Controller
     public function store(Request $request)
     {
         $transaction = Transaction::create(['desc' => $request->desc]);
-        Entry::create(['transaction_id' => $transaction->id, 'account_id' => $request->credit_entry_id, 'type' => EntryType::CREDIT, 'amount' => $request->amount]);
-        Entry::create(['transaction_id' => $transaction->id, 'account_id' => $request->debit_entry_id, 'type' => EntryType::DEBIT, 'amount' => $request->amount]);
+        $transaction->entries()
+            ->createMany([
+                ['account_id' => $request->credit_entry_id, 'type' => EntryType::CREDIT, 'amount' => $request->amount],
+                ['account_id' => $request->debit_entry_id, 'type' => EntryType::DEBIT, 'amount' => $request->amount],
+            ]);
     }
 }

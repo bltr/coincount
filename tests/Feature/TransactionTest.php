@@ -29,7 +29,17 @@ class TransactionTest extends TestCase
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('transactions', ['desc' => 'Зарплата']);
-        $this->assertDatabaseHas('entries', ['transaction_id' => 1, 'type' => EntryType::DEBIT->value, 'account_id' => 2, 'amount' => 50.000]);
-        $this->assertDatabaseHas('entries', ['transaction_id' => 1, 'type' => EntryType::CREDIT->value, 'account_id' => 1, 'amount' => 50.000]);
+        $this->assertDatabaseHas('entries', [
+            'transaction_id' => 1,
+            'account_id' => 2,
+            'type' => EntryType::DEBIT->value,
+            'amount' => 50.000
+        ]);
+        $this->assertDatabaseHas('entries', [
+            'transaction_id' => 1,
+            'account_id' => 1,
+            'type' => EntryType::CREDIT->value,
+            'amount' => 50.000
+        ]);
     }
 }
