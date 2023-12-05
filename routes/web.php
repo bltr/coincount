@@ -13,6 +13,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/accounts', [App\Http\Controllers\AccountsController::class, 'index'])->name('accounts.index');
