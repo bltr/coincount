@@ -11,7 +11,7 @@ class GetAccountsListTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function test_it_get_accounts_list()
+    public function it_get_accounts_list()
     {
         $records = [
             ['name' => 'Счет Сбер', 'desc' => 'Зарплатный счет', 'type' => AccountType::ACTIVE->value],

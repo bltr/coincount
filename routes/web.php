@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AccountsController;
+use App\Http\Controllers\TransactionsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,4 +15,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/accounts', [App\Http\Controllers\AccountsController::class, 'index'])->name('accounts.index');
+Route::get('/accounts', [AccountsController::class, 'index'])->name('accounts.index');
+
+Route::post('/transactions', [TransactionsController::class, 'store'])->name('transactions.store');
