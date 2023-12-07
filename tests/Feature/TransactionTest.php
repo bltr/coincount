@@ -22,8 +22,8 @@ class TransactionTest extends TestCase
 
         $response = $this->postJson('/transactions', [
             'desc' => 'Зарплата',
-            'debit_entry_id' => 2,
-            'credit_entry_id' => 1,
+            'debit_account_id' => 2,
+            'credit_account_id' => 1,
             'amount' => 50.000,
         ]);
 
