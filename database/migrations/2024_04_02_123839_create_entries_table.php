@@ -9,10 +9,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('entries', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id');
             $table->timestamps();
-            $table->unsignedBigInteger('account_id');
-            $table->unsignedBigInteger('transaction_id');
+            $table->uuid('account_id');
+            $table->uuid('transaction_id');
             $table->enum('type', \App\Models\EntryType::values());
             $table->unsignedBigInteger('amount');
         });
