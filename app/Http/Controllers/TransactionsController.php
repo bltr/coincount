@@ -16,5 +16,7 @@ class TransactionsController extends Controller
                 ['account_id' => $request->credit_account_id, 'type' => EntryType::CREDIT, 'amount' => $request->amount],
                 ['account_id' => $request->debit_account_id, 'type' => EntryType::DEBIT, 'amount' => $request->amount],
             ]);
+
+        return ['transaction_id' => $transaction->id];
     }
 }
