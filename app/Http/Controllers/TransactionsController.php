@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Entry;
+use App\Http\Requests\CreateTransactionRequest;
 use App\Models\EntryType;
 use App\Models\Transaction;
-use Illuminate\Http\Request;
 
 class TransactionsController extends Controller
 {
-    public function store(Request $request)
+    public function store(CreateTransactionRequest $request)
     {
         $transaction = Transaction::create(['desc' => $request->desc]);
         $transaction->entries()
