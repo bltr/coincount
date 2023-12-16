@@ -9,7 +9,8 @@ class TransactionsController extends Controller
 {
     public function store(CreateTransactionRequest $request)
     {
-        ['desc' =>$desc, 'entries' => $entries] = $request->all();
+        $desc = $request->desc;
+        $entries = $request->entries;
 
         $transaction = Transaction::create(['desc' => $desc]);
         $transaction->entries()

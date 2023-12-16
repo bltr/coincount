@@ -2,8 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\AccountType;
-use App\Models\EntryType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -31,20 +29,42 @@ class TransactionTest extends TestCase
         ]);
 
         // assert
-        $response->assertStatus(200);
+        $response->assertOk();
         $this->assertDatabaseHas('transactions', ['desc' => 'Зарплата']);
         $this->assertDatabaseHas('entries', [
             'transaction_id' => $response->json('transaction_id'),
             'account_id' => '018eae87-7984-7291-891d-ddd0c0334d3b',
-            'type' => EntryType::DEBIT->value,
+            'type' => 'debit',
             'amount' => 50000
         ]);
         $this->assertDatabaseHas('entries', [
             'transaction_id' => $response->json('transaction_id'),
             'account_id' => '018eae87-7985-7310-b3d7-c6e1c53c5114',
-            'type' => EntryType::CREDIT->value,
+            'type' => 'credit',
             'amount' => 50000
         ]);
+    }
+
+    /** @test */
+    public function it_dont_require_transaction_description()
+    {
+        // arrange
+        \DB::table('accounts')->insert([
+            ['id' => '018eae87-7984-7291-891d-ddd0c0334d3b', 'name' => 'Сбер', 'desc' => 'Зарплатный счет', 'type' => 'active'],
+            ['id' => '018eae87-7985-7310-b3d7-c6e1c53c5114', 'name' => 'Работа', 'desc' => 'Оклад', 'type' => 'income'],
+        ]);
+
+        // act
+        $response = $this->postJson('/transactions', [
+            //'desc' => 'Зарплата',
+            'entries' => [
+                ['type' => 'debit', 'account_id' => '018eae87-7984-7291-891d-ddd0c0334d3b', 'amount' => 50000],
+                ['type' => 'credit', 'account_id' => '018eae87-7985-7310-b3d7-c6e1c53c5114', 'amount' => 50000],
+            ]
+        ]);
+
+        // assert
+        $response->assertOk();
     }
 
     /**
@@ -55,8 +75,8 @@ class TransactionTest extends TestCase
     {
         // arrange
         \DB::table('accounts')->insert([
-            ['id' => '018eae87-7984-7291-891d-ddd0c0334d3b', 'name' => 'Сбер', 'desc' => 'Зарплатный счет', 'type' => AccountType::ACTIVE->value],
-            ['id' => '018eae87-7985-7310-b3d7-c6e1c53c5114', 'name' => 'Работа', 'desc' => 'Оклад', 'type' => AccountType::INCOME->value],
+            ['id' => '018eae87-7984-7291-891d-ddd0c0334d3b', 'name' => 'Сбер', 'desc' => 'Зарплатный счет', 'type' => 'active'],
+            ['id' => '018eae87-7985-7310-b3d7-c6e1c53c5114', 'name' => 'Работа', 'desc' => 'Оклад', 'type' => 'active'],
         ]);
 
         // act
