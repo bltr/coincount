@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\EntryType;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateTransactionRequest extends FormRequest
@@ -14,9 +15,10 @@ class CreateTransactionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'amount' => 'required|integer',
-            'credit_account_id' => 'required|uuid|exists:accounts,id',
-            'debit_account_id' => 'required|uuid|exists:accounts,id',
+            'entries' => 'array',
+            'entries.*.amount' => 'required|integer',
+            'entries.*.account_id' => 'required|uuid|exists:accounts,id',
+            'entries.*.type' => 'in:' . implode(',', EntryType::values()),
         ];
     }
 }
