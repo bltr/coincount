@@ -94,6 +94,29 @@ class TransactionTest extends TestCase
     }
 
     /** @test */
+    public function sum_of_credit_entries_must_be_equal_sum_of_debit_entry()
+    {
+        // arrange
+        \DB::table('accounts')->insert([
+            ['id' => '018eae87-7984-7291-891d-ddd0c0334d3b', 'name' => 'Сбер', 'desc' => 'Зарплатный счет', 'type' => 'active'],
+            ['id' => '018eae87-7984-7291-891d-ddd0c0334d3d', 'name' => 'Наличные', 'desc' => '', 'type' => 'active'],
+            ['id' => '018eae87-7985-7310-b3d7-c6e1c53c5114', 'name' => 'Работа', 'desc' => 'Оклад', 'type' => 'income'],
+        ]);
+
+        // act
+        $response = $this->postJson('/transactions', [
+            'desc' => 'Зарплата',
+            'entries' => [
+                ['type' => 'debit', 'account_id' => '018eae87-7984-7291-891d-ddd0c0334d3b', 'amount' => 40000],
+                ['type' => 'debit', 'account_id' => '018eae87-7984-7291-891d-ddd0c0334d3d', 'amount' => 30000],
+                ['type' => 'credit', 'account_id' => '018eae87-7985-7310-b3d7-c6e1c53c5114', 'amount' => 50000],
+            ]
+        ]);
+
+        $response->assertUnprocessable();
+    }
+
+    /** @test */
     public function it_dont_require_transaction_description()
     {
         // arrange

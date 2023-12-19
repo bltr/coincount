@@ -14,12 +14,15 @@ class TransactionsController extends Controller
         $entries = $request->entries;
 
         $has_debit = $has_credit = false;
+        $debit_sum = $credit_sum = 0;
         foreach ($entries as $entry) {
             if ($entry['type'] === 'debit') {
                 $has_debit = true;
+                $debit_sum += $entry['amount'];
             }
             if ($entry['type'] === 'credit') {
                 $has_credit = true;
+                $credit_sum += $entry['amount'];
             }
         }
         if (!$has_debit) {
@@ -27,6 +30,9 @@ class TransactionsController extends Controller
         }
         if (!$has_credit) {
             throw ValidationException::withMessages(['There must be at least one credit entry']);
+        }
+        if ($debit_sum !== $credit_sum) {
+            throw ValidationException::withMessages(['Debit and Credit sums do not equals']);
         }
 
         $transaction = Transaction::create(['desc' => $desc]);
