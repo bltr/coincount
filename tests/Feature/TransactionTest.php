@@ -16,6 +16,7 @@ class TransactionTest extends TestCase
         // arrange
         \DB::table('accounts')->insert([
             ['id' => '018eae87-7984-7291-891d-ddd0c0334d3b', 'name' => 'Сбер', 'desc' => 'Зарплатный счет', 'type' => 'active'],
+            ['id' => '018eae87-7984-7291-891d-ddd0c0334d3d', 'name' => 'Наличные', 'desc' => '', 'type' => 'active'],
             ['id' => '018eae87-7985-7310-b3d7-c6e1c53c5114', 'name' => 'Работа', 'desc' => 'Оклад', 'type' => 'income'],
         ]);
 
@@ -23,7 +24,8 @@ class TransactionTest extends TestCase
         $response = $this->postJson('/transactions', [
             'desc' => 'Зарплата',
             'entries' => [
-                ['type' => 'debit', 'account_id' => '018eae87-7984-7291-891d-ddd0c0334d3b', 'amount' => 50000],
+                ['type' => 'debit', 'account_id' => '018eae87-7984-7291-891d-ddd0c0334d3b', 'amount' => 40000],
+                ['type' => 'debit', 'account_id' => '018eae87-7984-7291-891d-ddd0c0334d3d', 'amount' => 10000],
                 ['type' => 'credit', 'account_id' => '018eae87-7985-7310-b3d7-c6e1c53c5114', 'amount' => 50000],
             ]
         ]);
@@ -35,7 +37,13 @@ class TransactionTest extends TestCase
             'transaction_id' => $response->json('transaction_id'),
             'account_id' => '018eae87-7984-7291-891d-ddd0c0334d3b',
             'type' => 'debit',
-            'amount' => 50000
+            'amount' => 40000
+        ]);
+        $this->assertDatabaseHas('entries', [
+            'transaction_id' => $response->json('transaction_id'),
+            'account_id' => '018eae87-7984-7291-891d-ddd0c0334d3d',
+            'type' => 'debit',
+            'amount' => 10000
         ]);
         $this->assertDatabaseHas('entries', [
             'transaction_id' => $response->json('transaction_id'),
