@@ -17,11 +17,13 @@ class GetAccountsListTest extends TestCase
         define('ACCOUNT_ID1', '018eb91b-0ab0-7205-8c16-3ebae664c028');
         define('ACCOUNT_ID2', '018eb91b-0ab2-72fc-bb09-ed9a5788e55c');
         define('ACCOUNT_ID3', '018eb91b-0ab2-72fc-bb09-ed9a5805b0dc');
+        define('ACCOUNT_ID4', '018eb91b-0ab9-72fc-bb09-ed9a5805b0dc');
 
         $account_records = [
             ['id' => ACCOUNT_ID1, 'name' => 'СчетСбер', 'type' => 'active', 'desc' => 'Зарплатный счет'],
             ['id' => ACCOUNT_ID2, 'name' => 'Зарплата', 'type' => 'income', 'desc' => 'Оклад'],
             ['id' => ACCOUNT_ID3, 'name' => 'Продукты', 'type' => 'expense', 'desc' => ''],
+            ['id' => ACCOUNT_ID4, 'name' => 'Продукты', 'type' => 'commitment', 'desc' => ''],
         ];
 
         \DB::table('accounts')->insert($account_records);

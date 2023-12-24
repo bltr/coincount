@@ -7,6 +7,7 @@ enum AccountType: string
     case ACTIVE = 'active';
     case INCOME = 'income';
     case EXPENSE = 'expense';
+    case COMMITMENT = 'commitment';
 
     public static function values(): array
     {
