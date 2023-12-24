@@ -26,13 +26,15 @@ class GetAccountsListTest extends TestCase
             ['id' => ACCOUNT_ID4, 'name' => 'Продукты', 'type' => 'commitment', 'desc' => ''],
         ];
 
+        $entries_records = [
+            ['id' => Uuid::uuid7(), 'transaction_id' => TRANSACTION_ID, 'account_id' => ACCOUNT_ID1, 'type' => 'debit', 'amount' => 10000],
+            ['id' => Uuid::uuid7(), 'transaction_id' => TRANSACTION_ID, 'account_id' => ACCOUNT_ID1, 'type' => 'debit', 'amount' => 5000],
+            ['id' => Uuid::uuid7(), 'transaction_id' => TRANSACTION_ID, 'account_id' => ACCOUNT_ID1, 'type' => 'credit', 'amount' => 3000],
+        ];
+
         \DB::table('accounts')->insert($account_records);
         \DB::table('transactions')->insert(['id' => TRANSACTION_ID]);
-        \DB::table('entries')->insert([
-            ['id' => Uuid::uuid7(), 'transaction_id' => TRANSACTION_ID, 'account_id' => ACCOUNT_ID1, 'type' => 'debit',  'amount' => 10000],
-            ['id' => Uuid::uuid7(), 'transaction_id' => TRANSACTION_ID, 'account_id' => ACCOUNT_ID1, 'type' => 'debit',  'amount' => 5000],
-            ['id' => Uuid::uuid7(), 'transaction_id' => TRANSACTION_ID, 'account_id' => ACCOUNT_ID1, 'type' => 'credit', 'amount' => 3000],
-        ]);
+        \DB::table('entries')->insert($entries_records);
 
         $response = $this->getJson('/accounts');
 
