@@ -14,6 +14,8 @@ class Account extends Model
         'type' => AccountType::class
     ];
 
+    protected $with = ['entries'];
+
     protected $appends = ['balance'];
 
     public function newUniqueId(): string
@@ -23,7 +25,13 @@ class Account extends Model
 
     public function getBalanceAttribute(): int
     {
-        return $this->entries()->where('type', EntryType::DEBIT)->sum('amount') - $this->entries()->where('type', EntryType::CREDIT)->sum('amount');
+        return $this->entries->reduce(function ($sum, $entry) {
+            $value = $entry->type === EntryType::DEBIT->value
+                ? $entry->amount
+                : - $entry->amount;
+
+            return $sum + $value;
+        }, 0);
     }
 
     public function entries()

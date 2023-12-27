@@ -41,6 +41,7 @@ class GetAccountsListTest extends TestCase
         $account_records[0]['balance'] = 12000;
         $account_records[1]['balance'] = 0;
         $account_records[2]['balance'] = 0;
+        $account_records[3]['balance'] = 0;
         $response->assertStatus(200);
         $response->assertJson($account_records);
     }
